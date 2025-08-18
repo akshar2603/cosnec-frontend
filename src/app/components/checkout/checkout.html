@@ -1,0 +1,45 @@
+<div class="checkout-container">
+  <div class="checkout-right">
+    <!-- Show loader while fetching -->
+    <div *ngIf="!cartLoaded" class="loading-container">
+      <div class="spinner"></div>
+      <div>Loading your cart...</div>
+    </div>
+    <!-- Show cart items if loaded and not empty -->
+
+
+    <div *ngIf="cartLoaded && cartItems.length > 0; else emptyCart">
+      <div *ngFor="let item of cartItems" class="summary-item">
+        <img [src]="item.image" alt="Product" width="60" height="60" />
+        <div>
+          <p class="product-name">{{ item.name }}</p>
+          <p class="product-price">₹{{ item.price }} x {{ item.qty }}</p>
+          <p class="product-subtotal">Subtotal: ₹{{ item.price * item.qty }}</p>
+        </div>
+      </div>
+      <div class="promo-code">
+        <input type="text" placeholder="Discount code or gift card" />
+        <button class="apply-btn">Apply</button>
+      </div>
+      <div class="price-summary">
+        <div>
+          <span>Subtotal</span><span>₹{{ total }}</span>
+        </div>
+        <div><span>Shipping</span><span>Enter shipping address</span></div>
+        <div class="total">
+          <span>Total</span><span>₹{{ total }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="checkout-left">
+    <div class="express-checkout">
+      <button class="express razorpay">Pay via Razor pay</button>
+    </div>
+  </div>
+</div>
+<!-- Empty cart template -->
+<ng-template #emptyCart>
+  <div class="checkout-empty">Your cart is empty.</div>
+</ng-template>
+<router-outlet></router-outlet>
