@@ -6,9 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  // private baseUrl = 'https://cosmos-bnqi.onrender.com/api'; // Main base URL
 
-    private baseUrl = 'https://cosmos-bnqi.onrender.com/api'; // Main base URL
+    private baseUrl = 'https://cosnec-backend.onrender.com/api'; // Main base URL
+    
+    
+
 
   constructor(private http: HttpClient) {}
 
