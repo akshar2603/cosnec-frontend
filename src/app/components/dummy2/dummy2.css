@@ -656,6 +656,7 @@ html, body {
 }
 .add-cart-btn {
   background-color: #f35c5c;
+  text-decoration-color: #000;
   border: none;
   padding: 10px 20px;
   font-size: 14px;
@@ -793,5 +794,27 @@ html, body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+@media (max-width: 768px) {
+  .cart-dialog {
+    width: 90%;
+    max-width: 100%;
+  }
+  .cart-item-img {
+    width: 70px;
+    height: 90px;
+  }
+  .qty-control button {
+    padding: 8px 14px;
+    font-size: 18px;
+  }
+  .remove {
+    font-size: 16px;
+    padding: 8px 12px;
+  }
+  .checkout {
+    font-size: 18px;
+    padding: 16px;
   }
 }
