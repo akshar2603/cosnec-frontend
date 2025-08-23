@@ -29,12 +29,12 @@
 
 .checkout-left {
   flex: 1;
-  min-width: 300px;
+  min-width: 200px;
 }
 
 .checkout-right {
   flex: 1;
-  min-width: 300px;
+  min-width: 200px;
   background: #f9f9f9;
   padding: 2rem;
   border-radius: 10px;
@@ -239,9 +239,10 @@ form {
       }
       
       .submit-btn {
-        background-color: #000;
+        background-color: #5fe417;
         color: #fff;
-        padding: 0.85rem;
+        padding: 3px;
+        height: 20px;
         border: none;
         border-radius: 8px;
         cursor: pointer;
@@ -284,7 +285,9 @@ form {
         flex: 1;
       }
       .apply-btn {
-        background-color: #000;
+        background-position: relative;
+        height: 20px;
+        background-color: #f92929;
         color: #fff;
         padding: 0.6rem 1.2rem;
         border: none;
