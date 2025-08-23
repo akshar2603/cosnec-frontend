@@ -6,15 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-
-    private baseUrl = 'https://cosnec-backend.onrender.com/api'; // Main base URL
-    
-    
-
+  private baseUrl = 'https://cosnec-backend.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 
-  // ================== PRODUCTS ==================
+  // ✅ PRODUCTS
   getProducts(): Observable<any> {
     return this.http.get(`${this.baseUrl}/products`);
   }
@@ -35,36 +31,74 @@ export class ApiService {
     return this.http.delete(`${this.baseUrl}/products/${id}`);
   }
 
-  // ================== CART ==================
+  // ✅ Upload images to Cloudinary (via backend)
+  uploadImages(files: File[]): Observable<{ urls: string[] }> {
+    const formData = new FormData();
+    files.forEach(file => formData.append('files', file));
+    return this.http.post<{ urls: string[] }>(`${this.baseUrl.replace('/api', '')}/upload/multiple`, formData);
+  }
 
-  // Fetch cart by userId
+  updateProductWithImages(productId: string, productData: any, files: File[]): Observable<any> {
+  if (files && files.length > 0) {
+    // If there are files to upload, first upload them
+    const formData = new FormData();
+    files.forEach(file => formData.append('files', file));
+
+    return new Observable(observer => {
+      // Upload images
+      this.http.post<{ urls: string[] }>(`${this.baseUrl.replace('/api', '')}/upload/multiple`, formData)
+        .subscribe({
+          next: (res) => {
+            productData.images = res.urls; // Replace old images
+            // Then update product
+            this.http.put(`${this.baseUrl}/products/${productId}`, productData)
+              .subscribe({
+                next: (response) => {
+                  observer.next(response);
+                  observer.complete();
+                },
+                error: (err) => observer.error(err)
+              });
+          },
+          error: (err) => observer.error(err)
+        });
+    });
+  } else {
+    // No files, just update the product
+    return this.http.put(`${this.baseUrl}/products/${productId}`, productData);
+  }
+}
+
+  deleteProductImage(productId: string): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/products/${productId}`);
+}
+
+
+
+
+
+  // ✅ CART
   getCart(userId: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/cart/${userId}`);
   }
 
-  // Add or update item in cart
   addToCart(userId: string, item: any): Observable<any> {
-    // console.log('Adding to cart:', userId, item);
     return this.http.post(`${this.baseUrl}/cart/add`, { userId, item });
   }
 
-  // Remove a single item by productId
   removeFromCart(userId: string, productId: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/cart/remove`, { userId, productId });
   }
 
-  // Update item quantity (calls the same add route as addToCart)
   updateCartItem(userId: string, item: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/cart/add`, { userId, item });
   }
 
-  // Optional: clear the entire cart (if you add a backend route for it)
   clearCart(userId: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/cart/clear`, { userId });
   }
 
-  // ================== AUTH / SUBSCRIBE ==================
-
+  // ✅ AUTH
   registerUser(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/register`, data);
   }
@@ -76,5 +110,13 @@ export class ApiService {
   subscribe(email: string, userId: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/subscribe`, { email, userId });
   }
+
+  // ✅ PAYMENT
+  createRazorpayOrder(amount: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/payment/create-order`, { amount });
+  }
+
+  verifyRazorpayPayment(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/payment/verify-payment`, data);
+  }
 }
-  

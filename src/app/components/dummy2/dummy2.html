@@ -65,18 +65,24 @@
     <!-- <h1>Total Products: {{ products.length }}</h1> -->
 
     <div class="products">
-      <div class="product" *ngFor="let item of filteredProducts; let i = index">
+  <div class="product" *ngFor="let item of filteredProducts; let i = index">
+    <div class="image-slider">
+      <img [src]="item.images[currentImageIndex[i] || 0]" [alt]="item.name" />
 
-        <!-- <p>#{{ i + 1 }}</p> -->
-        <img [src]="item.image" [alt]="item.name" />
-      <div class="product-footer">
-        <h3>{{ item.name }}</h3>
-        <p>₹{{ item.price }}</p>
-        <button class="add-cart-btn" (click)="addToCart(item)">ADD TO CART</button>
-      </div>
-
-      </div>
+      <button class="prev" (click)="prevImage(i, item.images.length)">&#10094;</button>
+      <button class="next" (click)="nextImage(i, item.images.length)">&#10095;</button>
     </div>
+
+    <div class="product-footer">
+      <h3>{{ item.name }}</h3>
+       <p class="product-desc">{{ item.description }}</p>
+      <p>₹{{ item.price }}</p>
+      <button class="add-cart-btn" (click)="addToCart(item)">ADD TO CART</button>
+    </div>
+  </div>
+</div>
+
+
   </section>
 
   <!-- FEATURES -->
@@ -124,7 +130,7 @@
         <a href="#">Affiliate Program</a>
       </div>
     </div>
-    <p class="copy">© 2025 Cosmos. All rights reserved.</p>
+    <p class="copy">© 2025 Cosnec. All rights reserved.</p>
     <a 
   href="https://wa.me/8238327000" 
   target="_blank" 
@@ -162,7 +168,7 @@
       </div>             
       <div class="cart-footer">
         <p class="subtotal">SUBTOTAL: <strong>₹{{ subtotal }}</strong></p>
-        <a routerLink="/checkout" (click)="clicked()">Checkout</a>
+        <a routerLink="/checkout">Checkout</a>
       </div>
     </div>
   </div>

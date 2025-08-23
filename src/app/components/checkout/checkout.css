@@ -239,10 +239,9 @@ form {
       }
       
       .submit-btn {
-        background-color: #5fe417;
+        background-color: #39e417;
         color: #fff;
         padding: 3px;
-        height: 20px;
         border: none;
         border-radius: 8px;
         cursor: pointer;
@@ -285,9 +284,7 @@ form {
         flex: 1;
       }
       .apply-btn {
-        background-position: relative;
-        height: 20px;
-        background-color: #f92929;
+        background-color: #000;
         color: #fff;
         padding: 0.6rem 1.2rem;
         border: none;

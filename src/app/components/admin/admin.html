@@ -1,13 +1,7 @@
-  
-  <!-- HEADER / NAV -->
+<!-- HEADER / NAV -->
 <header class="header">
   <div class="logo">🌿 COSNEC</div>
   <nav class="nav">
-
- 
-
-
-    <!-- 🔐 AUTH LINKS -->
     <a *ngIf="!loggedIn" routerLink="/register">Login</a>
 
     <div class="profile-wrapper" *ngIf="loggedIn" [class.open]="profileOpen">
@@ -19,36 +13,60 @@
   </nav>
 </header>
 
-  <!-- HERO SECTION -->
-
-
-  <!-- BEST SELLERS -->
-  <section class="best-sellers">
+<!-- BEST SELLERS -->
+<section class="best-sellers">
+  <div class="create-btn-wrapper">
     <button class="create-btn" (click)="openDialog()">Create Product</button>
-    <h2>Best Sellers</h2>
+  
+</div>
+
   
 
-    <div class="products">
-      <div class="product" *ngFor="let item of filteredProducts; let i = index">
-        <img [src]="item.image" [alt]="item.name" />
-      <div class="product-footer">
-        <h3>{{ item.name }}</h3>
-        <p>₹{{ item.price }}</p>
-        <div class="action-buttons">
+<div class="products">
+  <div class="product" *ngFor="let item of filteredProducts; let i = index">
+    
+    <div class="image-slider">
+      <img
+        [src]="
+          item.images && item.images.length > 0
+            ? item.images[currentImageIndex[i] || 0]
+            : item.image || 'assets/default.png'
+        "
+        [alt]="item.name"
+      />
+      <button
+        *ngIf="item.images && item.images.length > 1"
+        class="prev"
+        (click)="prevImage(i, item.images.length)"
+      >
+        ‹
+      </button>
+      <button
+        *ngIf="item.images && item.images.length > 1"
+        class="next"
+        (click)="nextImage(i, item.images.length)"
+      >
+        ›
+      </button>
+    </div>
+
+    <div class="product-footer">
+      <h3>{{ item.name }}</h3>
+      <p>₹{{ item.price }}</p>
+        <p class="product-description">{{ item.description }}</p>
+      <div class="action-buttons">
         <button class="update-btn" (click)="openUpdateDialog(item)">Update</button>
         <button class="delete-btn" (click)="deleteProduct(item)">Delete</button>
       </div>
-        <!-- <button class="add-cart-btn" (click)="addToCart(item)">ADD TO CART</button> -->
-      </div>
-
-      </div>
     </div>
-  </section>
+  </div>
+</div>
 
 
 
+</section>
 
-  <!-- CREATE PRODUCT DIALOG -->
+<!-- CREATE PRODUCT DIALOG -->
 <div class="dialog-overlay" *ngIf="showDialog">
   <div class="dialog-box">
     <h2>Create Product</h2>
@@ -59,8 +77,8 @@
       <input type="number" placeholder="Price" [(ngModel)]="newProduct.price" name="price" required />
 
       <div class="upload-field">
-        <label>Upload Product Image:</label>
-        <input type="file" (change)="onFileSelected($event)" />
+        <label>Upload Product Images (Multiple):</label>
+        <input type="file" (change)="onFilesSelected($event)" multiple />
       </div>
 
       <textarea placeholder="Description" [(ngModel)]="newProduct.description" name="description"></textarea>
@@ -86,12 +104,19 @@
       <input type="number" placeholder="Price" [(ngModel)]="editProduct.price" name="price" required />
 
       <div class="upload-field">
-        <label>Upload Product Image:</label>
-        <input type="file" (change)="onEditFileSelected($event)" />
+        <label>Upload New Product Images (Multiple):</label>
+        <input type="file" (change)="onEditFilesSelected($event)" multiple />
       </div>
 
       <textarea placeholder="Description" [(ngModel)]="editProduct.description" name="description"></textarea>
       <input type="number" placeholder="Stock" [(ngModel)]="editProduct.stock" name="stock" />
+
+      <div *ngIf="editProduct.images && editProduct.images.length > 0">
+        <p>Current Images:</p>
+        <div class="preview-images">
+          <img *ngFor="let img of editProduct.images" [src]="img" alt="Current Image" />
+        </div>
+      </div>
     </form>
     <div class="dialog-actions">
       <button class="cancel-btn" (click)="closeUpdateDialog()">Cancel</button>
@@ -100,6 +125,4 @@
   </div>
 </div>
 
-  <router-outlet></router-outlet>
-
-
+<router-outlet></router-outlet>

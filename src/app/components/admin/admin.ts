@@ -5,7 +5,7 @@ import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ProductStateService } from '../../service/product-state.service';
-import { filter } from 'rxjs/internal/operators/filter';
+import { filter } from 'rxjs/operators';
 import { AuthService } from '../../service/auth.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class Admin implements OnInit {
   loggedIn = false;
   profileOpen = false;
   userId: string = '';
-
+  selectedFiles: File[] = [];
   products: any[] = [];
   filteredProducts: any[] = [];
   len = 0;
@@ -30,18 +30,26 @@ export class Admin implements OnInit {
     brand: '',
     category: '',
     price: 0,
-    image: '',
+    images: [] as string[], // ✅ store multiple image URLs
     description: '',
     stock: 0,
   };
-  selectedFile: File | null = null;
   uploading = false;
 
   showUpdateDialog = false;
   editProduct: any = {};
-  selectedEditFile: File | null = null;
+  selectedEditFiles: File[] = []; // ✅ support multiple files for update
   searchQuery: string = '';
+  currentImageIndex: number[] = [];
 
+nextImage(i: number, total: number) {
+  this.currentImageIndex[i] = (this.currentImageIndex[i] + 1) % total;
+}
+
+prevImage(i: number, total: number) {
+  this.currentImageIndex[i] =
+    (this.currentImageIndex[i] - 1 + total) % total;
+}
   constructor(
     private apiService: ApiService,
     private router: Router,
@@ -69,14 +77,11 @@ export class Admin implements OnInit {
     if (this.productState.hasProducts()) {
       this.products = this.productState.getProducts();
       this.filteredProducts = [...this.products];
+        
       this.cd.detectChanges();
     } else {
-      this.apiService.getProducts().subscribe((res: any) => {
-        this.products = res;
-        this.filteredProducts = [...res];
-        this.productState.setProducts(res);
-        this.cd.detectChanges();
-      });
+      
+      this.loadProducts();
     }
   }
 
@@ -86,7 +91,7 @@ export class Admin implements OnInit {
       this.filteredProducts = [...this.products];
       return;
     }
-    this.filteredProducts = this.products.filter(p =>
+    this.filteredProducts = this.products.filter((p) =>
       p.name?.toLowerCase().includes(query)
     );
   }
@@ -103,7 +108,7 @@ export class Admin implements OnInit {
     this.router.navigate(['/']);
   }
 
-  // --- Product CRUD ---
+  // -------------------- CREATE PRODUCT --------------------
 
   openDialog() {
     this.showDialog = true;
@@ -120,47 +125,42 @@ export class Admin implements OnInit {
       brand: '',
       category: '',
       price: 0,
-      image: '',
+      images: [],
       description: '',
       stock: 0,
     };
-    this.selectedFile = null;
+    this.selectedFiles = [];
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
+  onFilesSelected(event: any) {
+    this.selectedFiles = Array.from(event.target.files);
   }
 
   createProduct() {
-    if (!this.selectedFile) {
-      alert('⚠️ Select image first!');
+    if (this.selectedFiles.length === 0) {
+      alert('⚠️ Select at least one image!');
       return;
     }
+
     this.uploading = true;
     const formData = new FormData();
-    formData.append('file', this.selectedFile);
+    this.selectedFiles.forEach((file) => formData.append('files', file));
 
-    this.http.post<{ url: string }>('https://cosmos-bnqi.onrender.com/upload', formData).subscribe({
-      next: (res) => {
-        this.newProduct.image = res.url;
-        this.http.post('https://cosmos-bnqi.onrender.com/api/products', this.newProduct).subscribe({
-          next: () => {
-            this.uploading = false;
-            this.closeDialog();
-            this.loadProducts();
-          },
-          error: (err) => {
-            console.error('❌ Product creation failed', err);
-            this.uploading = false;
-          },
-        });
-      },
-      error: (err) => {
-        console.error('❌ Image upload failed', err);
-        this.uploading = false;
-      },
+    this.apiService.uploadImages(this.selectedFiles).subscribe({
+  next: (res) => {
+    this.newProduct.images = res.urls;
+    this.apiService.createProduct(this.newProduct).subscribe({
+      next: () => { this.uploading = false; this.closeDialog(); this.loadProducts(); },
+      error: (err) => { console.error('❌ Product creation failed', err); this.uploading = false; }
     });
   }
+});
+
+  }
+
+
+  
+  // -------------------- UPDATE PRODUCT --------------------
 
   openUpdateDialog(item: any) {
     this.editProduct = { ...item };
@@ -170,65 +170,58 @@ export class Admin implements OnInit {
   closeUpdateDialog() {
     this.showUpdateDialog = false;
     this.editProduct = {};
-    this.selectedEditFile = null;
+    this.selectedEditFiles = [];
   }
 
-  onEditFileSelected(event: any) {
-    this.selectedEditFile = event.target.files[0];
+  onEditFilesSelected(event: any) {
+    this.selectedEditFiles = Array.from(event.target.files);
   }
 
-  updateProductSave() {
-    if (!this.editProduct._id) {
-      console.error('❌ Missing ID');
-      return;
-    }
-
-    const updateCall = () => {
-      this.http.put(`https://cosmos-bnqi.onrender.com/api/products/${this.editProduct._id}`, this.editProduct).subscribe({
-        next: () => {
-          this.closeUpdateDialog();
-          this.loadProducts();
-        },
-        error: (err) => console.error('❌ Update failed', err),
-      });
-    };
-
-    if (this.selectedEditFile) {
-      const formData = new FormData();
-      formData.append('file', this.selectedEditFile);
-      this.http.post<{ url: string }>('https://cosmos-bnqi.onrender.com/upload', formData).subscribe({
-        next: (res) => {
-          this.editProduct.image = res.url;
-          updateCall();
-        },
-        error: (err) => console.error('❌ Image upload failed', err),
-      });
-    } else {
-      updateCall();
-    }
+updateProductSave() {
+  if (!this.editProduct._id) {
+    console.error('❌ Missing ID');
+    return;
   }
+
+  this.apiService.updateProductWithImages(this.editProduct._id, this.editProduct, this.selectedEditFiles)
+    .subscribe({
+      next: () => {
+        this.closeUpdateDialog();
+        this.loadProducts();
+        console.log('✅ Product updated successfully');
+      },
+      error: (err) => console.error('❌ Update failed', err)
+    });
+}
+
 
   deleteProduct(item: any) {
-    if (!confirm('Are you sure to delete?')) return;
-    this.http.delete(`https://cosmos-bnqi.onrender.com/api/products/${item._id}`).subscribe({
-      next: () => {
-        this.products = this.products.filter((p) => p._id !== item._id);
-        this.filteredProducts = this.filteredProducts.filter((p) => p._id !== item._id);
-        this.cd.detectChanges();
-      },
-      error: (err) => console.error('❌ Delete failed', err),
-    });
-  }
+  if (!confirm('Are you sure to delete?')) return;
 
-  loadProducts() {
-    this.apiService.getProducts().subscribe({
-      next: (data: any) => {
-        this.products = data;
-        this.filteredProducts = [...data];
-        this.len = data.length;
-        this.cd.detectChanges();
-      },
-      error: (err) => console.error('❌ Error fetching products:', err),
-    });
-  }
+  this.apiService.deleteProductImage(item._id).subscribe({
+    next: () => {
+      this.products = this.products.filter((p) => p._id !== item._id);
+      this.filteredProducts = this.filteredProducts.filter((p) => p._id !== item._id);
+      this.cd.detectChanges();
+    },
+    error: (err) => console.error('❌ Delete failed', err),
+  });
+}
+
+
+loadProducts() {
+  this.apiService.getProducts().subscribe({
+    next: (data: any) => {
+      this.products = data;
+      this.filteredProducts = [...data];
+      this.len = data.length;
+      this.currentImageIndex = new Array(this.len).fill(0); // ✅ initialize
+      this.cd.detectChanges();
+    },
+    error: (err) => console.error('❌ Error fetching products:', err),
+  });
+}
+
+
+
 }

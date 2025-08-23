@@ -34,14 +34,14 @@ export class Dummy2 implements OnInit {
   loggedIn = false;
   profileOpen = false;
   userId: string = '';
-
+  currentImageIndex: number[] = [];
   showDialog = false;
   newProduct = {
     name: '',
     brand: '',
     category: '',
     price: 0,
-    image: '',
+  images: [] as string[], // ✅ multiple images
     description: '',
     stock: 0,
   };
@@ -52,6 +52,15 @@ export class Dummy2 implements OnInit {
   editProduct: any = {};
   selectedEditFile: File | null = null;
   searchQuery: string = '';
+
+  nextImage(i: number, total: number) {
+  this.currentImageIndex[i] = (this.currentImageIndex[i] + 1) % total;
+}
+
+prevImage(i: number, total: number) {
+  this.currentImageIndex[i] =
+    (this.currentImageIndex[i] - 1 + total) % total;
+}
 
   constructor(
     private apiService: ApiService,
@@ -76,7 +85,7 @@ export class Dummy2 implements OnInit {
     this.userId = localStorage.getItem('userId') || '';
     
 
-    console.log('🔍 User ID:', this.userId);
+
 
     this.checkLoginStatus();
     document.addEventListener('click', (event: any) => {
@@ -86,17 +95,20 @@ export class Dummy2 implements OnInit {
     });
 
     if (this.productState.hasProducts()) {
-      this.products = this.productState.getProducts();
-      this.filteredProducts = [...this.products];
-      this.cd.detectChanges(); // <-- force update
-    } else {
-      this.apiService.getProducts().subscribe((res: any) => {
-        this.products = res;
-        this.filteredProducts = [...res];
-        this.productState.setProducts(res);
-        this.cd.detectChanges(); 
-      });
-    }
+  this.products = this.productState.getProducts();
+  this.filteredProducts = [...this.products];
+  this.currentImageIndex = new Array(this.filteredProducts.length).fill(0);
+  this.cd.detectChanges();
+} else {
+  this.apiService.getProducts().subscribe((res: any) => {
+    this.products = res;
+    this.filteredProducts = [...res];
+    this.currentImageIndex = new Array(this.filteredProducts.length).fill(0);
+    this.productState.setProducts(res);
+    this.cd.detectChanges();
+  });
+}
+
 
     if (this.userId) {
       if (this.cartState.hasCart()) {
@@ -146,7 +158,7 @@ export class Dummy2 implements OnInit {
     };
 
     this.apiService.addToCart(this.userId, item).subscribe((res) => {
-      console.log('Item added to backend cart', res);
+     
     });
 
     this.cartOpen = true;
@@ -158,7 +170,9 @@ export class Dummy2 implements OnInit {
         this.products = data;
         this.filteredProducts = [...data];
         this.len = data.length;
-        console.log('✅ Products loaded:', this.products);
+         this.currentImageIndex = new Array(this.len).fill(0); // ✅ initialize
+           this.cd.detectChanges();
+        
       },
       error: (err) => console.error('❌ Error fetching products:', err),
     });
@@ -213,7 +227,6 @@ export class Dummy2 implements OnInit {
       qty: item.qty,
     };
     this.http.put('https://cosmos-bnqi.onrender.com/api/cart/update-qty', body).subscribe({
-      next: (res: any) => console.log('Quantity updated:', res),
       error: (err) => console.error('Failed to update quantity', err),
     });
   }
@@ -224,18 +237,15 @@ export class Dummy2 implements OnInit {
 
     this.cart = this.cart.filter((i) => i !== item);
     this.apiService.removeFromCart(this.userId, item.productId).subscribe({
-      next: () => console.log('🗑️ Removed from backend cart:', item.productId),
       error: (err) => console.error('❌ Failed to remove from cart:', err),
     });
   }
+
 
   get subtotal(): number {
     return this.cart.reduce((acc, item) => acc + item.price * item.qty, 0);
   }
 
-  clicked() {
-    console.log('🛒 Checkout clicked');
-  }
 
   openDialog() {
     this.showDialog = true;
@@ -252,122 +262,15 @@ export class Dummy2 implements OnInit {
       brand: '',
       category: '',
       price: 0,
-      image: '',
+      images: [],
       description: '',
       stock: 0,
     };
     this.selectedFile = null;
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
-  }
 
-  createProduct() {
-    if (!this.selectedFile) {
-      alert('⚠️ Select image first!');
-      return;
-    }
-    this.uploading = true;
-    const formData = new FormData();
-    formData.append('file', this.selectedFile);
 
-    this.http
-      .post<{ url: string }>('https://cosmos-bnqi.onrender.com/upload', formData)
-      .subscribe({
-        next: (res) => {
-          this.newProduct.image = res.url;
-          this.http
-            .post('https://cosmos-bnqi.onrender.com/api/products', this.newProduct)
-            .subscribe({
-              next: () => {
-                this.uploading = false;
-                this.closeDialog();
-                this.loadProducts();
-              },
-              error: (err) => {
-                console.error('❌ Product creation failed', err);
-                this.uploading = false;
-              },
-            });
-        },
-        error: (err) => {
-          console.error('❌ Image upload failed', err);
-          this.uploading = false;
-        },
-      });
-  }
-
-  openUpdateDialog(item: any) {
-    console.log('✏️ Opening update dialog for:', item._id);
-    this.editProduct = { ...item };
-    this.showUpdateDialog = true;
-  }
-
-  closeUpdateDialog() {
-    this.showUpdateDialog = false;
-    this.editProduct = {};
-    this.selectedEditFile = null;
-  }
-
-  onEditFileSelected(event: any) {
-    this.selectedEditFile = event.target.files[0];
-  }
-
-  updateProductSave() {
-    if (!this.editProduct._id) {
-      console.error('❌ Missing ID');
-      return;
-    }
-
-    const updateCall = () => {
-      this.http
-        .put(
-          `https://cosmos-bnqi.onrender.com/api/products/${this.editProduct._id}`,
-          this.editProduct
-        )
-        .subscribe({
-          next: () => {
-            console.log('✅ Product updated');
-            this.closeUpdateDialog();
-            this.loadProducts();
-          },
-          error: (err) => console.error('❌ Update failed', err),
-        });
-    };
-
-    if (this.selectedEditFile) {
-      const formData = new FormData();
-      formData.append('file', this.selectedEditFile);
-      this.http
-        .post<{ url: string }>('https://cosmos-bnqi.onrender.com/upload', formData)
-        .subscribe({
-          next: (res) => {
-            this.editProduct.image = res.url;
-            updateCall();
-          },
-          error: (err) => console.error('❌ Image upload failed', err),
-        });
-    } else {
-      updateCall();
-    }
-  }
-
-  deleteProduct(item: any) {
-    if (!confirm('Are you sure to delete?')) return;
-    this.http
-      .delete(`https://cosmos-bnqi.onrender.com/api/products/${item._id}`)
-      .subscribe({
-        next: () => {
-          console.log('🗑️ Product deleted:', item._id);
-          this.products = this.products.filter((p) => p._id !== item._id);
-          this.filteredProducts = this.filteredProducts.filter(
-            (p) => p._id !== item._id
-          );
-        },
-        error: (err) => console.error('❌ Delete failed', err),
-      });
-  }
 
   subscribe() {
     const userId = localStorage.getItem('userId');
