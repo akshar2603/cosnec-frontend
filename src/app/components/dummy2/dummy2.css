@@ -84,40 +84,62 @@ html, body {
   transform: scale(1.03);
 }
 
+
+/* PRODUCT IMAGE CONTAINER */
 .image-slider {
   position: relative;
   width: 100%;
-  max-height: 300px; /* limit height but allow flexibility */
+  height: 300px;           /* fixed height for all cards */
   overflow: hidden;
   border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #f9f9f9;     /* optional light background */
 }
 
+/* PRODUCT IMAGE */
 .image-slider img {
-  width: auto;
   max-width: 100%;
-  height: auto;
-  max-height: 300px;
-  object-fit: contain;
+  max-height: 100%;
+  object-fit: contain;     /* fit entire image inside container */
+  border-radius: 8px;
+  transition: transform 0.3s ease;
 }
 
+/* Optional hover effect */
+.image-slider img:hover {
+  transform: scale(1.05);
+}
+
+/* Navigation buttons */
 .image-slider button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0,0,0,0.5);
   color: #fff;
   border: none;
   font-size: 20px;
   padding: 8px;
   cursor: pointer;
   border-radius: 50%;
+  z-index: 2;
 }
 
 .image-slider .prev { left: 8px; }
 .image-slider .next { right: 8px; }
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .image-slider { height: 220px; }
+}
+
+@media (max-width: 480px) {
+  .image-slider { height: 180px; }
+}
+
+
 
 .product-footer {
   text-align: left;
@@ -168,18 +190,6 @@ html, body {
 .add-cart-btn:hover {
   background-color: #fb641b;
 }
-
-/* Responsive */
-@media (max-width: 768px) {
-  .products { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-  .image-slider { height: 180px; }
-}
-
-@media (max-width: 480px) {
-  .products { grid-template-columns: 1fr; }
-  .image-slider { height: 160px; }
-}
-
 
 
 
@@ -331,47 +341,47 @@ html, body {
 
 
 
-/* HERO SECTION - Amazon Promo */
+/* HERO SECTION - Amazon Promo (Updated) */
 .hero {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 40px;
-  width: 100vw;              /* full viewport width */
-  height: 500px;            /* half viewport height */
-  margin: 0;                 /* remove centering */
-  padding: 60px 5vw;         /* responsive horizontal padding */
+  width: 100%;
+  height: 400px;           /* fixed height like Flipkart */
+  margin: 0 auto;
+  padding: 40px 5vw;       /* responsive horizontal padding */
   background: #fff5f1;
-  border-radius: 0;          /* optional: remove round corners if it’s a banner */
+  border-radius: 16px;      /* optional round corners */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.05);
 }
 
-
-
 .hero-text {
-  flex: 1 1 400px;
-  min-width: 300px;
+  flex: 1 1 250px;
+  text-align: center;       /* center text for mobile */
+  max-width: 400px;
 }
 
 .hero-text h1 {
-  font-size: 2.5em;
-  margin-bottom: 16px;
+  font-size: 1.8em;
+  margin-bottom: 12px;
   color: #222;
 }
 
 .hero-text p {
-  font-size: 1.2em;
-  margin-bottom: 24px;
-  line-height: 1.5;
+  font-size: 1em;
+  margin-bottom: 16px;
+  line-height: 1.4;
   color: #555;
 }
 
 .hero-text a button {
   background-color: #f35c5c;
   border: none;
-  padding: 12px 28px;
-  font-size: 16px;
+  padding: 10px 20px;
+  font-size: 14px;
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
@@ -384,21 +394,72 @@ html, body {
   transform: scale(1.05);
 }
 
-.hero-img {
-  flex: 1 1 250px;
-  text-align: center;
-}
+
 
 .hero-img img {
-  max-width: 400px;
+  width: 260px;           /* match Flipkart section */
+  max-width: 100%;
   height: auto;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-.hero-img img:hover {
-  transform: scale(1.05);
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
 }
+
+.hero-img img:hover {
+  transform: scale(1.05);
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    height: auto;         /* allow auto height on mobile */
+    padding: 30px 5vw;
+    gap: 20px;
+  }
+
+  .hero-text {
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .hero-text h1 {
+    font-size: 1.5em;
+  }
+
+  .hero-text p {
+    font-size: 0.95em;
+  }
+
+  .hero-text a button {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+
+  .hero-img img {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 20px 5vw;
+    gap: 12px;
+  }
+
+  .hero-img img {
+    width: 160px;
+  }
+
+  .hero-text h1 {
+    font-size: 1.2em;
+  }
+
+  .hero-text p {
+    font-size: 0.9em;
+  }
+}
+
 
 /* BEST SELLERS */
 .best-sellers {
@@ -692,3 +753,10 @@ html, body {
     padding: 16px;
   }
 }
+
+
+
+
+
+
+
