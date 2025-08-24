@@ -1,0 +1,169 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fbe8e4;
+  min-height: 80vh;
+  padding: 50px 0;
+}
+
+.login-card {
+  background: #fff;
+  padding: 40px;
+  width: 500px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+}
+
+.login-card h4 {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+}
+
+.login-card h2 {
+  margin: 10px 0;
+  font-size: 28px;
+}
+
+.login-card p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+input[type="email"],
+input[type="password"] {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.2s ease;
+}
+
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #f4c2b3;
+  outline: none;
+}
+
+.forgot {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.forgot a {
+  font-size: 13px;
+  color: #666;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.forgot a:hover {
+  color: #e08677;
+}
+
+.login-btn {
+  background: #f4c2b3;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.login-btn:hover {
+  background: #e08677;
+  transform: scale(1.02);
+}
+
+.join-link {
+  margin: 20px 0;
+  font-size: 14px;
+}
+
+.join-link a {
+  color: #e08677;
+  text-decoration: none;
+  font-weight: bold;
+  transition: text-decoration 0.2s ease;
+}
+
+.join-link a:hover {
+  text-decoration: underline;
+}
+
+.facebook-btn,
+.google-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.facebook-btn {
+  background: #3b5998;
+}
+
+.google-btn {
+  background: #db4437;
+}
+
+.facebook-btn:hover,
+.google-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+.or {
+  margin: 10px 0;
+  font-weight: bold;
+  color: #777;
+}
+.login-btn {
+  background: #f4c2b3;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.login-btn:hover {
+  background: #e08677;
+  transform: scale(1.02);
+}
+
+/* ✨ When disabled */
+.login-btn:disabled {
+  background: #f4c2b3;      /* keep the light color */
+  opacity: 0.6;             /* make it look inactive */
+  cursor: not-allowed;      /* show the stop sign */
+  transform: none;          /* prevent hover animation */
+}

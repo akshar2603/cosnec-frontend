@@ -1,0 +1,88 @@
+<div class="address-page">
+  <!-- Title + Add button -->
+  <div class="header-bar">
+    <h2>📍 My Addresses</h2>
+    <button (click)="openModal(false)">➕ Add Address</button>
+  </div>
+  <hr />
+
+  <!-- Address List -->
+ <ul>
+  <li *ngFor="let addr of addresses; trackBy: trackById">
+    <label>
+      <input
+        type="radio"
+        name="selectedAddress"
+        [value]="addr._id"
+        [(ngModel)]="selectedAddressId"
+        [ngModelOptions]="{standalone: true}" />
+      {{ addr.fullName }}, {{ addr.street }}, {{ addr.city }}, {{ addr.state }} - {{ addr.postalCode }}
+      <span *ngIf="addr.isDefault" class="default-tag">✅ Default</span>
+    </label>
+  </li>
+</ul>
+
+<p *ngIf="!addresses?.length">No addresses saved yet.</p>
+
+
+  <!-- Actions -->
+  <div class="actions" *ngIf="selectedAddressId">
+    <button (click)="openModal(true)">✏️ Edit</button>
+    <button (click)="onDelete()">🗑️ Delete</button>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="showModal">
+  <div class="modal">
+    <h3>{{ isEditMode ? '✏️ Edit Address' : '➕ Add Address' }}</h3>
+
+    <form (ngSubmit)="saveAddress()" #form="ngForm">
+      <label>
+        Full Name:
+        <input [(ngModel)]="addressForm.fullName" name="fullName" required />
+      </label>
+
+      <label>
+        Phone:
+        <input [(ngModel)]="addressForm.phone" name="phone" required />
+      </label>
+
+      <label>
+        Street:
+        <input [(ngModel)]="addressForm.street" name="street" required />
+      </label>
+
+      <label>
+        City:
+        <input [(ngModel)]="addressForm.city" name="city" required />
+      </label>
+
+      <label>
+        State:
+        <input [(ngModel)]="addressForm.state" name="state" required />
+      </label>
+
+      <label>
+        Postal Code:
+        <input [(ngModel)]="addressForm.postalCode" name="postalCode" required />
+      </label>
+
+      <label>
+        Country:
+        <input [(ngModel)]="addressForm.country" name="country" required />
+      </label>
+
+      <label>
+        <input type="checkbox" [(ngModel)]="addressForm.isDefault" name="isDefault" />
+        Set as Default
+      </label>
+
+      <div class="modal-actions">
+        <button type="submit">{{ isEditMode ? 'Update' : 'Save' }}</button>
+        <button type="button" (click)="closeModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

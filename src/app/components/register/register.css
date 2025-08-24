@@ -1,0 +1,157 @@
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fbe8e4;
+  min-height: 80vh;
+  padding: 50px 0;
+}
+
+.register-card {
+  background: #fff;
+  padding: 40px;
+  width: 500px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.register-card:hover {
+  transform: translateY(-5px);
+}
+
+.register-card h4 {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #777;
+  letter-spacing: 1px;
+}
+
+.register-card h2 {
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+
+.register-card p {
+  margin-bottom: 20px;
+  color: #555;
+  font-size: 14px;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #f4c2b3;
+  box-shadow: 0 0 4px rgba(244, 194, 179, 0.6);
+  outline: none;
+}
+
+.checkbox {
+  text-align: left;
+  margin: 15px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.checkbox a {
+  color: #e08677;
+  text-decoration: none;
+  transition: text-decoration 0.2s ease;
+}
+
+.checkbox a:hover {
+  text-decoration: underline;
+}
+
+.register-btn {
+  background: #f4c2b3;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.register-btn:hover {
+  background: #e08677;
+  transform: scale(1.02);
+}
+
+.register-btn:disabled {
+  background: #f4c2b3;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.signin-link {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.signin-link a {
+  color: #e08677;
+  text-decoration: none;
+  font-weight: bold;
+  transition: text-decoration 0.2s ease;
+}
+
+.signin-link a:hover {
+  text-decoration: underline;
+}
+
+.or {
+  margin: 10px 0;
+  font-weight: bold;
+  color: #777;
+}
+
+.facebook-btn,
+.google-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.facebook-btn {
+  background: #3b5998;
+}
+
+.google-btn {
+  background: #db4437;
+}
+
+.facebook-btn:hover,
+.google-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}

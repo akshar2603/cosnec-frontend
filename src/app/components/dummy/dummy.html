@@ -1,0 +1,214 @@
+  <!-- HEADER / NAV -->
+  <!-- HEADER / NAV -->
+<header class="header">
+  <div class="logo">🌿 COSNEC</div>
+  <nav class="nav">
+
+    <!-- 🌟 SEARCH BAR + ICON -->
+    <div class="search-container">
+    <input [(ngModel)]="searchQuery" (keyup)="searchProducts()" placeholder="Search..." />
+
+      <button  class="search-btn"><i (click)="searchProducts()" class="fas fa-search"></i> </button>
+    </div>
+
+    <!-- 🛒 CART -->
+    <div class="cart-wrapper" (click)="toggleCart()">
+      🛒 <span class="cart-count">
+        {{ loadingCart ? '...' : cartCount }}
+      </span>
+    </div>
+
+    <!-- 🔐 AUTH LINKS -->
+    <a *ngIf="!loggedIn" routerLink="/register">Login</a>
+
+    <div class="profile-wrapper" *ngIf="loggedIn" [class.open]="profileOpen">
+      <button class="profile-icon" (click)="profileOpen = !profileOpen">👤</button>
+      <div class="dropdown-menu" *ngIf="profileOpen">
+        <a routerLink="/orders">📦 My Orders</a>
+        <a routerLink="/addresses">🏠 My Address</a>
+        <a (click)="logout()">🚪 Logout</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+  <!-- HERO SECTION -->
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Visit Our Amazon Page</h1>
+      <p>
+        Explore our curated collection and shop your favorite products directly on Amazon.
+      </p>
+      <a 
+        href="https://www .amazon.in/LAKM%C3%89-Skincare-Superglow-Perfecting-Natural/dp/B0D4YL1SZ2/ref=sxin_14_pa_sp_search_thematic_sspa?content-id=amzn1.sym.739e670d-dfb3-4be0-9815-d8c5c0372e07%3Aamzn1.sym.739e670d-dfb3-4be0-9815-d8c5c0372e07&crid=1RDPH3J4LAL4J&cv_ct_cx=cosmetic+product&keywords=cosmetic+product&pd_rd_i=B0D4YL1SZ2&pd_rd_r=9bbfd965-c3b2-4b18-977b-9cf6327744de&pd_rd_w=zfmYR&pd_rd_wg=Tm5IB&pf_rd_p=739e670d-dfb3-4be0-9815-d8c5c0372e07&pf_rd_r=RWP328N8MMN0M13QEVEH&qid=1754158804&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sprefix=cosmetic+produc%2Caps%2C264&sr=1-1-66673dcf-083f-43ba-b782-d4a436cc5cfb-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9zZWFyY2hfdGhlbWF0aWM&psc=1" 
+        target="_blank" 
+        rel="noopener noreferrer"
+      >
+        <button>SHOP NOW</button>
+      </a>
+    </div>
+    <div class="hero-img">
+      <img src="https://m.media-amazon.com/images/I/41P4OFYlsxL._SL1000_.jpg" alt="Amazon Shop Banner" />
+    </div>
+  </section>
+
+  <!-- BEST SELLERS -->
+  <section class="best-sellers">
+    <button class="create-btn" (click)="openDialog()">Create Product</button>
+    <h2>Best Sellers</h2>
+  
+
+    <div class="products">
+      <div class="product" *ngFor="let item of filteredProducts; let i = index">
+        <img [src]="item.image" [alt]="item.name" />
+      <div class="product-footer">
+        <h3>{{ item.name }}</h3>
+        <p>₹{{ item.price }}</p>
+        <div class="action-buttons">
+        <button class="update-btn" (click)="openUpdateDialog(item)">Update</button>
+        <button class="delete-btn" (click)="deleteProduct(item)">Delete</button>
+      </div>
+        <button class="add-cart-btn" (click)="addToCart(item)">ADD TO CART</button>
+      </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="colour-section flipkart-section">
+    <div class="colour-img">
+      <img src="https://rukminim2.flixcart.com/image/612/612/xif0q/shopsy-combo-kit/m/b/9/glow-ultimate-skin-care-kit-face-body-scrub-face-wash-tube-face-original-imah4uyzdkzfpsdg.jpeg?q=70" alt="Coffee Bean Caffeine Eye Cream" />
+    </div>
+    <div class="colour-content">
+      <ul>
+        <li>🌟 97% saw visible glow on skin</li>
+        <li>✨ 89% felt reduced fine lines</li>
+        <li>💧 94% experienced firmer under-eye area</li>
+        <li>❄️ 100% loved the cooling effect</li>
+      </ul>
+      <a href="https://www.flipkart.com/phillauri-complete-skin-care-cleanse-tone-exfoliate-hydrate-protect-natural-ingredients-radiant-youthful-looking/p/itm5cb6220b90caa?pid=CBKH3FY3DYJFBDZV&lid=LSTCBKH3FY3DYJFBDZVRG8YEK&marketplace=FLIPKART&q=cosmetic+products+skin+care&store=g9b%2Fema%2F5la&srno=s_1_2&otracker=search&otracker1=search&fm=Search&iid=en_2dOEgT5mNh_azVmq-jQvjsvtjxqciJBhqWKF4nr5a4sjUFHx0zfPhu18P2ojIIYtz9Hd3_Ck0BnMMz6EyJczJg%3D%3D&ppt=sp&ppn=sp&ssid=vhn9hrh4eo0000001754161376858&qH=3a15783ca5bb219b" target="_blank">
+        <button class="shop-btn">SHOP ON FLIPKART</button>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-columns">
+      <div class="footer-col">
+        <h4>Subscribe</h4>
+      <input type="email" [(ngModel)]="subscriberEmail" placeholder="Enter your email" />
+        <button class="Subscribe" (click)="subscribe()">Subscribe</button>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <a href="#">Our Mission</a>
+        <a href="#">Philanthropy</a>
+        <a href="#">Press</a>
+      </div>
+      <div class="footer-col">
+        <h4>Help</h4>
+        <a href="#">FAQ</a>
+        <a href="#">Returns</a>
+        <a href="#">Contact Us</a>
+      </div>
+      <div class="footer-col">
+        <h4>Rewards</h4>
+        <a href="#">My Account</a>
+        <a href="#">Purist Perks</a>
+        <a href="#">Affiliate Program</a>
+      </div>
+    </div>
+    <p class="copy">© 2025 Cosnec. All rights reserved.</p>
+  </footer>
+
+  <!-- CART DIALOG -->
+  <div class="cart-overlay" [class.active]="cartOpen">
+    <div class="cart-dialog">
+      <div class="cart-header">
+        <h2>MY CART</h2>
+        <button (click)="toggleCart()">✖</button>
+      </div>
+      <div class="cart-items">
+        <div class="cart-item" *ngFor="let c of cart">
+          <img class="cart-item-img" [src]="c.image" alt="{{ c.name }}" />
+          <div class="cart-item-info">
+            <p class="item-name">{{ c.name }}</p>
+            <div class="item-controls">
+              <div class="qty-control">
+                <button (click)="decreaseQty(c)">−</button>
+                <span>{{ c.qty }}</span>
+                <button (click)="increaseQty(c)">+</button>
+              </div>
+              <p class="remove" (click)="removeItem(c)">Remove</p>
+            </div>
+          </div>
+          <p class="item-price">₹{{ c.price * c.qty }}</p>
+        </div>
+      </div>             
+      <div class="cart-footer">
+        <p class="subtotal">SUBTOTAL: <strong>₹{{ subtotal }}</strong></p>
+        <a routerLink="/checkout" (click)="clicked()">Checkout</a>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- CREATE PRODUCT DIALOG -->
+<div class="dialog-overlay" *ngIf="showDialog">
+  <div class="dialog-box">
+    <h2>Create Product</h2>
+    <form #productForm="ngForm">
+      <input type="text" placeholder="Name" [(ngModel)]="newProduct.name" name="name" required />
+      <input type="text" placeholder="Brand" [(ngModel)]="newProduct.brand" name="brand" required />
+      <input type="text" placeholder="Category" [(ngModel)]="newProduct.category" name="category" required />
+      <input type="number" placeholder="Price" [(ngModel)]="newProduct.price" name="price" required />
+
+      <div class="upload-field">
+        <label>Upload Product Image:</label>
+        <input type="file" (change)="onFileSelected($event)" />
+      </div>
+
+      <textarea placeholder="Description" [(ngModel)]="newProduct.description" name="description"></textarea>
+      <input type="number" placeholder="Stock" [(ngModel)]="newProduct.stock" name="stock" />
+    </form>
+    <div class="dialog-actions">
+      <button class="cancel-btn" (click)="closeDialog()">Cancel</button>
+      <button class="save-btn" [disabled]="uploading" (click)="createProduct()">
+        {{ uploading ? 'Uploading...' : 'Save' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- UPDATE PRODUCT DIALOG -->
+<div class="dialog-overlay" *ngIf="showUpdateDialog">
+  <div class="dialog-box">
+    <h2>Update Product</h2>
+    <form #updateForm="ngForm">
+      <input type="text" placeholder="Name" [(ngModel)]="editProduct.name" name="name" required />
+      <input type="text" placeholder="Brand" [(ngModel)]="editProduct.brand" name="brand" required />
+      <input type="text" placeholder="Category" [(ngModel)]="editProduct.category" name="category" required />
+      <input type="number" placeholder="Price" [(ngModel)]="editProduct.price" name="price" required />
+
+      <div class="upload-field">
+        <label>Upload Product Image:</label>
+        <input type="file" (change)="onEditFileSelected($event)" />
+      </div>
+
+      <textarea placeholder="Description" [(ngModel)]="editProduct.description" name="description"></textarea>
+      <input type="number" placeholder="Stock" [(ngModel)]="editProduct.stock" name="stock" />
+    </form>
+    <div class="dialog-actions">
+      <button class="cancel-btn" (click)="closeUpdateDialog()">Cancel</button>
+      <button class="save-btn" (click)="updateProductSave()">Update</button>
+    </div>
+  </div>
+</div>
+
+  <router-outlet></router-outlet>
+
+

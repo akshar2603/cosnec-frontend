@@ -1,0 +1,32 @@
+<div class="login-page">
+  <div class="login-card">
+    <h4>HEY GORGEOUS</h4>
+    <h2>Welcome Back!</h2>
+    <p>Sign in below to access your Purist Perks account.</p>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="input-row">
+        <input type="email" placeholder="Email" name="email" [(ngModel)]="email" required>
+        <input type="password" placeholder="Password" name="password" [(ngModel)]="password" required>
+      </div>
+
+      <div class="forgot">
+        <a href="#">Forgot your password?</a>
+      </div>
+
+<button class="login-btn" [disabled]="!loginForm.valid">LOG IN</button>
+
+    </form>
+
+    <p class="join-link">
+      NOT A MEMBER? <a routerLink="/register">JOIN HERE</a>
+    </p>
+
+    <hr>
+    <p class="or">OR</p>
+
+    <button class="facebook-btn">Login with Facebook</button>
+    <button class="google-btn">Login with Google</button>
+  </div>    
+</div>
+<router-outlet></router-outlet>
