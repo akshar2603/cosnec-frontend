@@ -1,26 +1,77 @@
+<nav class="navbar">
+  <!-- Logo -->
+  <a href="/" class="logo">Cosnec</a>
+
+  <!-- Cart Icon -->
+  <button onclick="history.back()" class="cart-btn">
+    🛒
+  </button>
+</nav>
+
+
+
 <div class="checkout-container">
+  <!-- LEFT SECTION: Address + Payment -->
+  <div class="checkout-left">
+    <h2>Checkout</h2>
+
+    <!-- Contact -->
+    <form>
+
+      <!-- Delivery Address -->
+      <h3>Delivery</h3>
+
+      <input type="text" placeholder="First name" required />
+      <input type="text" placeholder="Last name" required />
+             <select>
+        <option>Select Country
+        </option>
+        <option>India</option>
+      </select>
+      <input type="text" placeholder="Enter State" required /> 
+      <input type="text" placeholder="Address" required />
+      <input type="text" placeholder="Apartment, suite, etc. (optional)" />
+      <input type="text" placeholder="City" required />
+      <input type="text" placeholder="ZIP code" required />
+       <input type="email" placeholder="Email" required />
+        <input type="text" placeholder="Phone" required />
+    </form>
+
+    <!-- Payment -->
+    <h3>Payment Method</h3>
+    <div class="payment-options">
+      <label class="cod-option">
+        <input type="radio" name="payment" checked />
+        Cash on Delivery (COD)
+      </label>
+    </div>
+
+    <button class="submit-btn">Pay Now</button>
+  </div>
+
+  <!-- RIGHT SECTION: Cart Summary -->
   <div class="checkout-right">
-    <!-- Show loader while fetching -->
     <div *ngIf="!cartLoaded" class="loading-container">
       <div class="spinner"></div>
       <div>Loading your cart...</div>
     </div>
-    <!-- Show cart items if loaded and not empty -->
-
 
     <div *ngIf="cartLoaded && cartItems.length > 0; else emptyCart">
+      <h3>Order Summary</h3>
       <div *ngFor="let item of cartItems" class="summary-item">
-        <img [src]="item.image" alt="Product" width="60" height="60" />
+        <img [src]="item.image" alt="Product" />
         <div>
           <p class="product-name">{{ item.name }}</p>
           <p class="product-price">₹{{ item.price }} x {{ item.qty }}</p>
           <p class="product-subtotal">Subtotal: ₹{{ item.price * item.qty }}</p>
         </div>
       </div>
+
       <div class="promo-code">
         <input type="text" placeholder="Discount code or gift card" />
         <button class="apply-btn">Apply</button>
       </div>
+
       <div class="price-summary">
         <div>
           <span>Subtotal</span><span>₹{{ total }}</span>
@@ -31,18 +82,9 @@
         </div>
       </div>
     </div>
+
+    <ng-template #emptyCart>
+      <div class="checkout-empty">Your cart is empty.</div>
+    </ng-template>
   </div>
-
-  <!-- <div class="checkout-left">
-    <div class="express-checkout">
-    <button class="express razorpay" (click)="payWithRazorpay()">Pay via Razorpay</button>
-    </div>
-  </div>
-</div> -->
-
-
-<!-- Empty cart template -->
-<ng-template #emptyCart>
-  <div class="checkout-empty">Your cart is empty.</div>
-</ng-template>
-<router-outlet></router-outlet>
+</div>

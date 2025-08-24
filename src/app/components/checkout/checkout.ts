@@ -4,6 +4,8 @@ import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../service/api-service';
+import { Location } from '@angular/common';
+
 
 declare var Razorpay: any;
 
@@ -25,6 +27,7 @@ export class Checkout implements OnInit, OnDestroy {
     private apiService: ApiService,
     private router: Router,
     private cd: ChangeDetectorRef,
+    private location: Location,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -52,6 +55,9 @@ export class Checkout implements OnInit, OnDestroy {
       return;
     }
     this.fetchCart();
+  }
+  goBack() {
+    this.location.back(); // 🔙 goes one page back
   }
 
   fetchCart(): void {
