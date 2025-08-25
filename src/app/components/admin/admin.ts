@@ -19,7 +19,6 @@ export class Admin implements OnInit {
   loggedIn = false;
   profileOpen = false;
   userId: string = '';
-  selectedFiles: File[] = [];
   products: any[] = [];
   filteredProducts: any[] = [];
   len = 0;
@@ -36,9 +35,12 @@ export class Admin implements OnInit {
   };
   uploading = false;
 
-  showUpdateDialog = false;
+  showUpdateDialog = false
   editProduct: any = {};
-  selectedEditFiles: File[] = []; // ✅ support multiple files for update
+  selectedFiles: { file: File, order: number }[] = [];
+
+  selectedEditFiles: { file: File, order: number }[] = []; // <-- add this
+
   searchQuery: string = '';
   currentImageIndex: number[] = [];
 
@@ -131,36 +133,24 @@ prevImage(i: number, total: number) {
     };
     this.selectedFiles = [];
   }
-
-  onFilesSelected(event: any) {
-    this.selectedFiles = Array.from(event.target.files);
-  }
-
-  createProduct() {
-    if (this.selectedFiles.length === 0) {
-      alert('⚠️ Select at least one image!');
-      return;
-    }
-
-    this.uploading = true;
-    const formData = new FormData();
-    this.selectedFiles.forEach((file) => formData.append('files', file));
-
-    this.apiService.uploadImages(this.selectedFiles).subscribe({
-  next: (res) => {
-    this.newProduct.images = res.urls;
-    this.apiService.createProduct(this.newProduct).subscribe({
-      next: () => { this.uploading = false; this.closeDialog(); this.loadProducts(); },
-      error: (err) => { console.error('❌ Product creation failed', err); this.uploading = false; }
-    });
-  }
-});
-
-  }
-
-
   
   // -------------------- UPDATE PRODUCT --------------------
+
+
+  loadProducts() {
+  this.apiService.getProducts().subscribe({
+    next: (data: any) => {
+      this.products = data;
+      this.filteredProducts = [...data];
+      this.len = data.length;
+      this.currentImageIndex = new Array(this.len).fill(0); // ✅ initialize
+      this.cd.detectChanges();
+    },
+    error: (err) => console.error('❌ Error fetching products:', err),
+  });
+}
+
+
 
   openUpdateDialog(item: any) {
     this.editProduct = { ...item };
@@ -173,9 +163,36 @@ prevImage(i: number, total: number) {
     this.selectedEditFiles = [];
   }
 
-  onEditFilesSelected(event: any) {
-    this.selectedEditFiles = Array.from(event.target.files);
+onFilesSelected(event: any) {
+  const files = Array.from(event.target.files) as File[];
+  this.selectedFiles = files.map((file, index) => ({ file, order: index }));
+}
+
+createProduct() {
+  if (this.selectedFiles.length === 0) {
+    alert('⚠️ Select at least one image!');
+    return;
   }
+
+  this.uploading = true;
+
+  this.apiService.createProductWithImages(this.newProduct, this.selectedFiles).subscribe({
+    next: () => {
+      this.uploading = false;
+      this.closeDialog();
+      this.loadProducts();
+    },
+    error: (err) => {
+      console.error('❌ Product creation failed', err);
+      this.uploading = false;
+    }
+  });
+}
+
+onEditFilesSelected(event: any) {
+  const files = Array.from(event.target.files) as File[];
+  this.selectedEditFiles = files.map((file, index) => ({ file, order: index }));
+}
 
 updateProductSave() {
   if (!this.editProduct._id) {
@@ -207,21 +224,5 @@ updateProductSave() {
     error: (err) => console.error('❌ Delete failed', err),
   });
 }
-
-
-loadProducts() {
-  this.apiService.getProducts().subscribe({
-    next: (data: any) => {
-      this.products = data;
-      this.filteredProducts = [...data];
-      this.len = data.length;
-      this.currentImageIndex = new Array(this.len).fill(0); // ✅ initialize
-      this.cd.detectChanges();
-    },
-    error: (err) => console.error('❌ Error fetching products:', err),
-  });
-}
-
-
 
 }

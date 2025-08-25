@@ -31,43 +31,55 @@ export class ApiService {
     return this.http.delete(`${this.baseUrl}/products/${id}`);
   }
 
-  // ✅ Upload images to Cloudinary (via backend)
-  uploadImages(files: File[]): Observable<{ urls: string[] }> {
-    const formData = new FormData();
-    files.forEach(file => formData.append('files', file));
-    return this.http.post<{ urls: string[] }>(`${this.baseUrl.replace('/api', '')}/upload/multiple`, formData);
-  }
+// ✅ Upload images to Cloudinary (via backend)
+uploadImages(files: { file: File; order: number }[]): Observable<{ urls: string[] }> {
+  const formData = new FormData();
+  files.forEach(f => {
+    formData.append('files', f.file);
+    formData.append('orders', f.order.toString()); // send order as well
+  });
+  return this.http.post<{ urls: string[] }>(
+    `${this.baseUrl.replace('/api', '')}/upload/multiple`,
+    formData
+  );
+}
 
-  updateProductWithImages(productId: string, productData: any, files: File[]): Observable<any> {
-  if (files && files.length > 0) {
-    // If there are files to upload, first upload them
-    const formData = new FormData();
-    files.forEach(file => formData.append('files', file));
+// ✅ CREATE product with ordered images
+createProductWithImages(product: any, files: { file: File; order: number }[]): Observable<any> {
+  if (files.length === 0) return this.http.post(`${this.baseUrl}/products`, product);
 
-    return new Observable(observer => {
-      // Upload images
-      this.http.post<{ urls: string[] }>(`${this.baseUrl.replace('/api', '')}/upload/multiple`, formData)
-        .subscribe({
-          next: (res) => {
-            productData.images = res.urls; // Replace old images
-            // Then update product
-            this.http.put(`${this.baseUrl}/products/${productId}`, productData)
-              .subscribe({
-                next: (response) => {
-                  observer.next(response);
-                  observer.complete();
-                },
-                error: (err) => observer.error(err)
-              });
-          },
+  return new Observable(observer => {
+    this.uploadImages(files).subscribe({
+      next: (res) => {
+        product.images = res.urls; // backend already sends ordered URLs
+        this.http.post(`${this.baseUrl}/products`, product).subscribe({
+          next: (response) => { observer.next(response); observer.complete(); },
           error: (err) => observer.error(err)
         });
+      },
+      error: (err) => observer.error(err)
     });
-  } else {
-    // No files, just update the product
-    return this.http.put(`${this.baseUrl}/products/${productId}`, productData);
-  }
+  });
 }
+
+// ✅ UPDATE product with ordered images
+updateProductWithImages(productId: string, productData: any, files: { file: File; order: number }[]): Observable<any> {
+  if (files.length === 0) return this.http.put(`${this.baseUrl}/products/${productId}`, productData);
+
+  return new Observable(observer => {
+    this.uploadImages(files).subscribe({
+      next: (res) => {
+        productData.images = res.urls; // backend ensures correct order
+        this.http.put(`${this.baseUrl}/products/${productId}`, productData).subscribe({
+          next: (response) => { observer.next(response); observer.complete(); },
+          error: (err) => observer.error(err)
+        });
+      },
+      error: (err) => observer.error(err)
+    });
+  });
+}
+  
 
   deleteProductImage(productId: string): Observable<any> {
   return this.http.delete(`${this.baseUrl}/products/${productId}`);
