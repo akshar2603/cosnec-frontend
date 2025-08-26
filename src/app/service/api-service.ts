@@ -8,6 +8,8 @@ import { Observable } from 'rxjs';
 export class ApiService {
   private baseUrl = 'https://cosnec-backend.onrender.com/api';
 
+  private localUrl =  'http://localhost:3000/api' ; 
+
   constructor(private http: HttpClient) {}
 
   // ✅ PRODUCTS
