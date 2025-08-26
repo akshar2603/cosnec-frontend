@@ -31,6 +31,7 @@ export class ApiService {
     return this.http.delete(`${this.baseUrl}/products/${id}`);
   }
 
+<<<<<<< HEAD
   // ✅ Upload images to Cloudinary (via backend)
   uploadImages(files: File[]): Observable<{ urls: string[] }> {
     const formData = new FormData();
@@ -69,6 +70,58 @@ export class ApiService {
   }
 }
 
+=======
+// ✅ Upload images to Cloudinary (via backend)
+uploadImages(files: { file: File; order: number }[]): Observable<{ urls: string[] }> {
+  const formData = new FormData();
+  files.forEach(f => {
+    formData.append('files', f.file);
+    formData.append('orders', f.order.toString()); // send order as well
+  });
+  return this.http.post<{ urls: string[] }>(
+    `${this.baseUrl.replace('/api', '')}/upload/multiple`,
+    formData
+  );
+}
+
+// ✅ CREATE product with ordered images
+createProductWithImages(product: any, files: { file: File; order: number }[]): Observable<any> {
+  if (files.length === 0) return this.http.post(`${this.baseUrl}/products`, product);
+
+  return new Observable(observer => {
+    this.uploadImages(files).subscribe({
+      next: (res) => {
+        product.images = res.urls; // backend already sends ordered URLs
+        this.http.post(`${this.baseUrl}/products`, product).subscribe({
+          next: (response) => { observer.next(response); observer.complete(); },
+          error: (err) => observer.error(err)
+        });
+      },
+      error: (err) => observer.error(err)
+    });
+  });
+}
+
+// ✅ UPDATE product with ordered images
+updateProductWithImages(productId: string, productData: any, files: { file: File; order: number }[]): Observable<any> {
+  if (files.length === 0) return this.http.put(`${this.baseUrl}/products/${productId}`, productData);
+
+  return new Observable(observer => {
+    this.uploadImages(files).subscribe({
+      next: (res) => {
+        productData.images = res.urls; // backend ensures correct order
+        this.http.put(`${this.baseUrl}/products/${productId}`, productData).subscribe({
+          next: (response) => { observer.next(response); observer.complete(); },
+          error: (err) => observer.error(err)
+        });
+      },
+      error: (err) => observer.error(err)
+    });
+  });
+}
+  
+
+>>>>>>> fb69f569f0bc0ec8e570e247ec4829564b1ec4d3
   deleteProductImage(productId: string): Observable<any> {
   return this.http.delete(`${this.baseUrl}/products/${productId}`);
 }

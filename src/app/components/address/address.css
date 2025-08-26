@@ -1,3 +1,4 @@
+<<<<<<< HEAD
   .address-page {
     max-width: 700px;
     margin: 40px auto;
@@ -219,3 +220,218 @@
     background: #d32f2f;
     transform: scale(1.02);
   }
+=======
+.address-page {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  font-family: Arial, sans-serif;
+}
+
+/* 🔹 Title + Add Button in one row, centered */
+.header-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* space between title & button */
+  margin-bottom: 25px;
+  flex-direction: column;
+}
+.address-page hr {
+  border: none;
+  border-top: 2px solid #f4c2b3; /* soft pink line */
+  margin: 20px 0;
+}
+
+
+.header-bar h2 {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+  text-align: center;
+}
+
+.header-bar button {
+  background: #f4c2b3;
+  color: #333;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.header-bar button:hover {
+  background: #e08677;
+  transform: scale(1.05);
+}
+
+/* 📋 Address List */
+.address-page ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+}
+.address-page li {
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  background: #fbe8e4;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+.address-page li:hover {
+  background: #f9d9d4;
+}
+.address-page label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  font-size: 14px;
+  color: #555;
+}
+.address-page input[type="radio"] {
+  transform: scale(1.2);
+  accent-color: #e08677;
+}
+.address-page .default-tag {
+  margin-left: auto;
+  color: green;
+  font-weight: bold;
+}
+
+/* 🛠 Actions (Edit/Delete) */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.actions button {
+  background: #f4c2b3;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.actions button:hover {
+  background: #e08677;
+  transform: scale(1.05);
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 450px;
+  max-width: 90%;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+/* Form */
+form label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #555;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="tel"],
+form input[type="checkbox"],
+form input[type="email"],
+form input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 4px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+form input:focus {
+  border-color: #4CAF50;
+  outline: none;
+  box-shadow: 0 0 5px rgba(76,175,80,0.3);
+}
+
+/* Checkbox inline */
+form label input[type="checkbox"] {
+  width: auto;
+  margin-right: 6px;
+}
+
+/* Modal actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.modal-actions button[type="submit"] {
+  background: #4CAF50;
+  color: white;
+}
+
+.modal-actions button[type="submit"]:hover {
+  background: #45a049;
+}
+
+.modal-actions button[type="button"] {
+  background: #ddd;
+  color: #333;
+}
+
+.modal-actions button[type="button"]:hover {
+  background: #bbb;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+>>>>>>> fb69f569f0bc0ec8e570e247ec4829564b1ec4d3
