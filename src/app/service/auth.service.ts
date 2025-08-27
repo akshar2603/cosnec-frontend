@@ -24,7 +24,7 @@ export class AuthService {
   }
 
  googleLogin(token: string) {
-  return this.http.post(`${this.localUrl}/google`, { id_token: token }); // ✅ match backend
+  return this.http.post(`${this.api}/google`, { id_token: token }); // ✅ match backend
 }
 
 
