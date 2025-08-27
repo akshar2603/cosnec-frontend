@@ -129,29 +129,3 @@ input[type="password"]:focus {
   color: #777;
 }
 
-.facebook-btn,
-.google-btn {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 4px;
-  color: #fff;
-  font-weight: bold;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: opacity 0.3s ease, transform 0.2s ease;
-}
-
-.facebook-btn {
-  background: #3b5998;
-}
-
-.google-btn {
-  background: #db4437;
-}
-
-.facebook-btn:hover,
-.google-btn:hover {
-  opacity: 0.9;
-  transform: scale(1.02);
-}
