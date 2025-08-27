@@ -19,6 +19,9 @@ export class Login implements OnInit {
 
   email = '';
   password = '';
+  showForgot = false;
+resetEmail = '';
+newPassword = '';
 
   constructor(private router: Router, private auth: AuthService) {}
 
@@ -61,21 +64,17 @@ export class Login implements OnInit {
 private handleGoogleResponse(response: any) {
   const credential = response.credential;
 
-  // ✅ print raw token
-  console.log('Google ID Token (JWT):', credential);
 
   // ✅ decode JWT payload (for debugging only)
   const base64Url = credential.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   const decodedPayload = JSON.parse(atob(base64));
-  console.log('Decoded Google Payload:', decodedPayload);
 
   // send token to backend for verification
   this.auth.googleLogin(credential).subscribe({
     next: (res: any) => {
       localStorage.setItem('token', res.token);
       localStorage.setItem('userId', res.userId);
-      console.log('Google Login successful:', res.userId);
       this.router.navigate(['/']);
     },
     error: (err) => {

@@ -4,24 +4,30 @@
     <h2>Create Your Account</h2>
     <p>Sign up to receive exclusive offers, redeemable points, and more!</p>
 
-    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
-      <div class="input-row">
-        <input type="text" placeholder="First Name" name="firstName" [(ngModel)]="firstName" required>
-        <input type="text" placeholder="Last Name" name="lastName" [(ngModel)]="lastName" required>
-      </div>
-      <input type="email" placeholder="Email" name="email" [(ngModel)]="email" required>
-      <input type="password" placeholder="Password" name="password" [(ngModel)]="password" required>
+   <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+  <div class="input-row">
+    <input type="text" placeholder="First Name" name="firstName" [(ngModel)]="firstName" required>
+    <input type="text" placeholder="Last Name" name="lastName" [(ngModel)]="lastName" required>
+  </div>
 
-      <div class="checkbox">
-        <input type="checkbox" id="agree" [(ngModel)]="agree" name="agree" required>
-        <label for="agree">
-          Yes, I agree with 100%PURE
-          <a href="#">Privacy Policy</a> and <a href="#">Terms of Use</a>
-        </label>
-      </div>
+  <div class="single-input">
+    <input type="email" placeholder="Email" name="email" [(ngModel)]="email" required>
+  </div>
 
-      <button class="register-btn" [disabled]="!registerForm.valid">REGISTER NOW</button>
-    </form>
+  <div class="single-input">
+    <input type="password" placeholder="Password" name="password" [(ngModel)]="password" required>
+  </div>
+
+  <div class="checkbox">
+    <input type="checkbox" id="agree" [(ngModel)]="agree" name="agree" required>
+    <label for="agree">
+      Yes, I agree with 100%PURE
+      <a href="#">Privacy Policy</a> and <a href="#">Terms of Use</a>
+    </label>
+  </div>
+
+  <button class="register-btn" [disabled]="!registerForm.valid">REGISTER NOW</button>
+</form>
 
     <p class="signin-link">ALREADY A MEMBER? <a routerLink="/login">SIGN IN</a></p>
     <hr>

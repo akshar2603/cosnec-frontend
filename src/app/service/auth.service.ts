@@ -27,6 +27,10 @@ export class AuthService {
   return this.http.post(`${this.api}/google`, { id_token: token }); // ✅ match backend
 }
 
+resetPassword(email: string, newPassword: string) {
+  return this.http.post(`${this.api}/reset-password`, { email, newPassword });
+}
+
 
 
   logout(): void {
